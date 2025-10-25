@@ -45,6 +45,7 @@ function calculateBonusByProfit(index, total, seller) {
 function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
 		const { calculateRevenue, calculateBonus } = options;
+		if (!calculateRevenue || !calculateBonus) return;
 
     // @TODO: Проверка наличия опций
 
@@ -67,6 +68,8 @@ function analyzeSalesData(data, options) {
     // @TODO: Расчет выручки и прибыли для каждого продавца
 		data.purchase_records.forEach(record => { // Чек 
         const seller = sellerIndex[record.seller_id]; // Продавец
+				if (!seller) return;
+
         // Увеличить количество продаж
 				seller.sales_count += 1;
         // Увеличить общую сумму всех продаж
@@ -75,10 +78,12 @@ function analyzeSalesData(data, options) {
         // Расчёт прибыли для каждого товара
         record.items.forEach(item => {
             const product = productIndex[item.sku]; // Товар
+						if (!product) return;
+
             // Посчитать себестоимость (cost) товара как product.purchase_price, умноженную на количество товаров из чека
 						let cost = product.purchase_price * item.quantity;
             // Посчитать выручку (revenue) с учётом скидки через функцию calculateRevenue
-						let revenue = calculateSimpleRevenue(item, product);
+						let revenue = calculateRevenue(item, product);
             // Посчитать прибыль: выручка минус себестоимость
 						let profit = revenue - cost;
         		// Увеличить общую накопленную прибыль (profit) у продавца
@@ -89,7 +94,7 @@ function analyzeSalesData(data, options) {
                 seller.products_sold[item.sku] = 0;
             }
             // По артикулу товара увеличить его проданное количество у продавца
-						seller.products_sold[item.sku] += item.quantity;
+						seller.products_sold[item.sku] = (seller.products_sold[item.sku] || 0) + item.quantity;
         });
     });
     // @TODO: Сортировка продавцов по прибыли
@@ -97,7 +102,7 @@ function analyzeSalesData(data, options) {
 
     // @TODO: Назначение премий на основе ранжирования
 		sellerStatsSorted.forEach((seller, index) => {
-        seller.bonus = calculateBonusByProfit(index, sellerStatsSorted.length, seller);// Считаем бонус
+        seller.bonus = calculateBonus(index, sellerStatsSorted.length, seller);// Считаем бонус
         seller.top_products = Object.entries(seller.products_sold)
 					.map(([sku, quantity]) => ({ sku, quantity }))// Формируем топ-10 товаров
 					.sort((a, b) => b.quantity - a.quantity)
