@@ -46,6 +46,10 @@ function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
 		const { calculateRevenue, calculateBonus } = options;
 		if (!calculateRevenue || !calculateBonus) return;
+		if (!data.sellers
+			|| !data.products
+			|| !data.purchase_records
+		) return;
 
     // @TODO: Проверка наличия опций
 
