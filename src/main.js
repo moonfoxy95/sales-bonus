@@ -55,6 +55,9 @@ function analyzeSalesData(data, options) {
 		if (!data.sellers || !data.products	|| !data.purchase_records)  {
 			throw new Error('!data.sellers || !data.products	|| !data.purchase_records')
 		};
+		if (!data.sellers.length || !data.products.length	|| !data.purchase_records.length)  {
+			throw new Error('!data.sellers.length || !data.products.length	|| !data.purchase_records.length')
+		};
 
     // @TODO: Проверка наличия опций
 
