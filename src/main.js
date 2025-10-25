@@ -45,11 +45,10 @@ function calculateBonusByProfit(index, total, seller) {
 function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
 		const { calculateRevenue, calculateBonus } = options;
-		if (!calculateRevenue || !calculateBonus) return;
-		if (!data.sellers
-			|| !data.products
-			|| !data.purchase_records
-		) return;
+		if (typeof(options) !== "object") return;
+		if (typeof(calculateRevenue) !== "function"
+			|| typeof(calculateBonus) !== "function") return;
+		if (!data.sellers || !data.products	|| !data.purchase_records) return;
 
     // @TODO: Проверка наличия опций
 
