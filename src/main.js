@@ -45,10 +45,16 @@ function calculateBonusByProfit(index, total, seller) {
 function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
 		const { calculateRevenue, calculateBonus } = options;
-		if (typeof(options) !== "object") return;
+		if (typeof(options) !== "object") {
+			throw new Error('typeof(options) !== "object"')
+		};
 		if (typeof(calculateRevenue) !== "function"
-			|| typeof(calculateBonus) !== "function") return;
-		if (!data.sellers || !data.products	|| !data.purchase_records) return;
+			|| typeof(calculateBonus) !== "function") {
+				throw new Error('typeof calculateRevenue /  calculateBonus!== "function"')
+		};
+		if (!data.sellers || !data.products	|| !data.purchase_records)  {
+			throw new Error('!data.sellers || !data.products	|| !data.purchase_records')
+		};
 
     // @TODO: Проверка наличия опций
 
